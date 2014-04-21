@@ -12,8 +12,15 @@ class MenuItem : public se::Renderable
         void renderLogic();
         void interpolate(const float interpolation);
         bool unregister()  const ;
-        bool selected;
+        void select();
+        void unselect();
         std::shared_ptr<se::Entity> myEntity;
         std::shared_ptr<se::Option> myOption;
+
+        private:
+            bool selected;
+            std::string myLabel;
+            unsigned int redIndex;
+            unsigned int sens;
 };
 #endif // MenuItem_hpp

@@ -1,24 +1,68 @@
 #include <MenuKeyboardEventObserver.hpp>
-MenuKeyboardEventObserver::MenuKeyboardEventObserver() : currentSelectedItem(0)
+MenuKeyboardEventObserver::MenuKeyboardEventObserver() : currentSelectedItem(1), firstShow(true)
 {
     myMenuScene = std::make_shared<se::SceneSetImplementation>();
 
-    items[0] = std::make_shared<MenuItem>("Start");
+    sf::RenderWindow& window = se::GraphicEngine::getInstance()->getRenderWindow();
 
+    std::shared_ptr<se::Entity> menuBg = std::make_shared<se::Entity>();
+    menuBg->setOrigin(59,48);
+    menuBg->setPosition(window.getSize().x/2, (window.getSize().y/2)-100);
+    menuBg->makeDrawable("menubg");
+    myMenuScene->registerRenderable(menuBg);
+
+    items[0] = std::make_shared<MenuItem>("Tanks !");
     myMenuScene->registerRenderable(items[0]);
     myMenuScene->registerRenderable(items[0]->myEntity);
+    items[0]->myEntity->setColor(sf::Color::Black);
 
-    myMenu.addOption(items[0]->myOption);
-    items[0]->selected=true;
+    items[1] = std::make_shared<MenuItem>("Go");
 
-    items[1] = std::make_shared<MenuItem>("Quit");
-
-    items[1]->myEntity->setPosition(0,50);
     myMenuScene->registerRenderable(items[1]);
     myMenuScene->registerRenderable(items[1]->myEntity);
 
-    myMenu.addOption(items[1]->myOption);
+    items[1]->select();
 
+    items[2] = std::make_shared<MenuItem>("Quit");
+
+    myMenuScene->registerRenderable(items[2]);
+    myMenuScene->registerRenderable(items[2]->myEntity);
+
+    items[1]->myEntity->setOrigin(50,50);
+    items[1]->myEntity->setPosition(window.getSize().x/2, window.getSize().y/2);
+
+    items[2]->myEntity->setOrigin(50,50);
+    items[2]->myEntity->setPosition(window.getSize().x/2, (window.getSize().y/2)+30);
+
+    items[2]->myOption = std::make_shared<se::SimpleFunctorOption<std::function<void()> > >([]()
+    {
+        se::Application::getInstance()->stop();
+    });
+    items[1]->myOption = std::make_shared<se::SimpleFunctorOption<std::function<void()> > >([this]()
+    {
+        hideMenu();
+    });
+
+    myMenu.addOption(items[1]->myOption);
+    myMenu.addOption(items[2]->myOption);
+}
+void MenuKeyboardEventObserver::showMenu()
+{
+    if(!myMenuIsOpen)
+    {
+        myMenuIsOpen = true;
+        se::Application::getInstance()->pushScene(myMenuScene);
+    }
+
+}
+void MenuKeyboardEventObserver::hideMenu()
+{
+    if(myMenuIsOpen)
+    {
+        firstShow = false;
+        myMenuIsOpen = false;
+        se::Application::getInstance()->popScene();
+    }
 
 }
 /** @brief notify
@@ -29,20 +73,18 @@ void MenuKeyboardEventObserver::notify(const se::Event& event)
 {
     if(event.getSfEvent().type == sf::Event::KeyPressed)
     {
-        if(event.getSfEvent().key.code == sf::Keyboard::Escape)
+        if(event.getSfEvent().key.code == sf::Keyboard::Escape && !firstShow)
         {
-
-            se::Application* app = se::Application::getInstance();
             if(myMenuIsOpen)
             {
-                myMenuIsOpen = false;
-                app->popScene();
+                hideMenu();
+
             }
             else
             {
-                myMenuIsOpen = true;
-                app->pushScene(myMenuScene);
+                showMenu();
             }
+
         }
         else if(event.getSfEvent().key.code == sf::Keyboard::Return)
         {
@@ -55,11 +97,13 @@ void MenuKeyboardEventObserver::notify(const se::Event& event)
         else if(event.getSfEvent().key.code == sf::Keyboard::Down)
         {
             myMenu.scrollUp();
-            items[currentSelectedItem]->selected = false;
+            items[currentSelectedItem]->unselect();
 
-            currentSelectedItem = (currentSelectedItem+1)%2;
+            currentSelectedItem = (currentSelectedItem+1)%3;
 
-            items[currentSelectedItem]->selected = true;
+            if(currentSelectedItem == 0) currentSelectedItem++;
+
+            items[currentSelectedItem]->select();
         }
     }
 }

@@ -54,6 +54,8 @@ int main()
 
     a->registerObserver(menukObs);
 
+    menukObs->showMenu();
+
     a->start();
 
     //log.append();
