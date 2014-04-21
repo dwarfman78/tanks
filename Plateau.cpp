@@ -5,14 +5,13 @@ bool one = false;
 
 Plateau::Plateau(se::Application& application) : myApplication(application),myPopTime(4000000),MAX_ENNEMI(10), myZikIndex(3)
 {
-    application.registerRenderable(std::shared_ptr<Renderable>(this));
 
     application.loadMusic(MUSIC[myZikIndex++%3]);
     application.playMusic();
     myClock.restart();
     myJoueur = std::make_shared<Joueur>(application,*this);
-    application.registerRenderable(myJoueur->myEntity);
-    application.registerRenderable(myJoueur);
+    myApplication.getCurrentScene()->registerRenderable(myJoueur->myEntity);
+    myApplication.getCurrentScene()->registerRenderable(myJoueur);
 
 }
 
@@ -88,8 +87,8 @@ void Plateau::renderLogic()
         one=true;
         myClock.restart();
         std::shared_ptr<Ennemi> newEnnemi = std::make_shared<Ennemi>(myApplication,*this);
-        myApplication.registerRenderable(newEnnemi->myEntity);
-        myApplication.registerRenderable(newEnnemi);
+        myApplication.getCurrentScene()->registerRenderable(newEnnemi->myEntity);
+        myApplication.getCurrentScene()->registerRenderable(newEnnemi);
         myEnnemis.insert(newEnnemi);
     }
 }
