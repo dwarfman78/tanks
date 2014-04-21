@@ -7,6 +7,7 @@
 #include <SimpleEngine/Core/Entity.hpp>
 #include <SimpleEngine/Graphic/AnimationManager.hpp>
 #include <SimpleEngine/ToolBox/Utils.hpp>
+#include <SimpleEngine/Core/Impl/SceneSetImplementation.hpp>
 #include <SFML/Graphics.hpp>
 #include <Bullet.hpp>
 class Joueur;

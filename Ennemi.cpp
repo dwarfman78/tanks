@@ -133,8 +133,8 @@ void Ennemi::tirer()
 
     myPlateau.getMyBullets().insert(newBullet);
 
-    myApplication.registerRenderable(newBullet->myEntity);
-    myApplication.registerRenderable(newBullet);
+    myApplication.getCurrentScene()->registerRenderable(newBullet->myEntity);
+    myApplication.getCurrentScene()->registerRenderable(newBullet);
 
     myApplication.addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,110,40,myEntity->getSprite().getRotation()+180,900000,"smokes","fire_smoke");
     myApplication.addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,70,40,myEntity->getSprite().getRotation()-90,200000,"muzzles","muzzle");

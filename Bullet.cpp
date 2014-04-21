@@ -7,7 +7,7 @@ Bullet::Bullet(se::Application& application, float angle, float x, float y,Owner
     myApplication(application)
 
 {
-    myEntity = std::shared_ptr<se::Entity>(new se::Entity());
+    myEntity = std::make_shared<se::Entity>();
 
     myEntity->makeDrawable("bullets");
     myEntity->makeAnimable("bullet_fire");
@@ -17,10 +17,6 @@ Bullet::Bullet(se::Application& application, float angle, float x, float y,Owner
     myEntity->setOrigin(12,12);
 
     defRotation();
-
-
-    //application.registerRenderable(std::shared_ptr<se::Renderable>(&myEntity));
-    //application.registerRenderable(std::shared_ptr<se::Renderable>(this));
 }
 
 Bullet::~Bullet()

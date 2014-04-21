@@ -5,6 +5,7 @@
 
 #include <StopObserver.hpp>
 #include <KeyboardObserver.hpp>
+#include <MenuKeyboardEventObserver.hpp>
 #include <Plateau.hpp>
 #if defined(SYSTEM_WINDOWS)
 #include <windows.h>
@@ -37,7 +38,9 @@ int main()
 
     window.setPosition(sf::Vector2i(mode.width/4, mode.height/4));
 
-    Plateau p(*a);
+    std::shared_ptr<Plateau> p = std::make_shared<Plateau>(*a);
+
+    a->getCurrentScene()->registerRenderable(p);
 
     StopObserver so;
 
@@ -46,6 +49,10 @@ int main()
     KeyboardObserver ko;
 
     a->registerObserver(std::shared_ptr<Observer>(&ko));
+
+    std::shared_ptr<MenuKeyboardEventObserver> menukObs = std::make_shared<MenuKeyboardEventObserver>();
+
+    a->registerObserver(menukObs);
 
     a->start();
 

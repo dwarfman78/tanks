@@ -22,7 +22,7 @@ Joueur::Joueur(se::Application& application, Plateau& plateau) : life(30), point
 
     lifeCounter->setScale(0.5,0.5);
 
-    application.registerRenderable(lifeCounter);
+    myApplication.getCurrentScene()->registerRenderable(lifeCounter);
 
     goodbyeMessage = std::make_shared<se::Entity>();
 
@@ -51,8 +51,8 @@ void Joueur::tirer()
 
     myPlateau.getMyBullets().insert(newBullet);
 
-    myApplication.registerRenderable(newBullet->myEntity);
-    myApplication.registerRenderable(newBullet);
+    myApplication.getCurrentScene()->registerRenderable(newBullet->myEntity);
+    myApplication.getCurrentScene()->registerRenderable(newBullet);
 
     myApplication.addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,110,40,myEntity->getSprite().getRotation()+180,900000,"smokes","fire_smoke");
 
@@ -73,7 +73,7 @@ void Joueur::renderLogic()
         goodbyeMessage->setPosition(window.getSize().x/2,window.getSize().y/2);
         goodbyeMessage->setScale(0.5,0.5);
         goodbyeMessage->setRotation(0);
-        myApplication.registerRenderable(goodbyeMessage);
+        myApplication.getCurrentScene()->registerRenderable(goodbyeMessage);
     }
     else if(life<=10)
     {
