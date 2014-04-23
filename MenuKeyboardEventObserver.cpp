@@ -1,56 +1,129 @@
 #include <MenuKeyboardEventObserver.hpp>
-MenuKeyboardEventObserver::MenuKeyboardEventObserver() : currentSelectedItem(1), firstShow(true)
+MenuKeyboardEventObserver::MenuKeyboardEventObserver() : firstShow(true)
 {
-    myMenuScene = std::make_shared<se::SceneSetImplementation>();
+    init();
+    myMenu.addOption(items[0]->myOption);
+    myMenu.addOption(items[1]->myOption);
+}
+void MenuKeyboardEventObserver::init()
+{
+    items.clear();
+    myMenuScene = std::make_shared<se::SceneVectorImplementation>();
 
+    if(!firstShow)
+    {
+        addBackground();
+    }
+    addEffectMenuItem();
+    addMenuTitle();
+    addGoMenuItem();
+
+    if(se::Application::getInstance()->isPaused())
+    {
+        addRestartMenuItem();
+    }
+
+    addQuitMenuItem();
+
+    currentItem = items.begin();
+}
+/** @brief addBackground
+  *
+  * @todo: document this function
+  */
+void MenuKeyboardEventObserver::addBackground()
+{
     sf::RenderWindow& window = se::GraphicEngine::getInstance()->getRenderWindow();
+    std::shared_ptr<se::Entity> mainBg = std::make_shared<se::Entity>();
+    mainBg->makeDrawable("menubg");
+    bgTexture.create(window.getSize().x,window.getSize().y);
+    bgTexture.update(window);
+    mainBg->getContext().getDrawingContext().getSprite().setTexture(bgTexture,true);
+    myMenuScene->registerRenderable(mainBg);
+}
 
+/** @brief addMenuTitle
+  *
+  * @todo: document this function
+  */
+void MenuKeyboardEventObserver::addMenuTitle()
+{
+    sf::RenderWindow& window = se::GraphicEngine::getInstance()->getRenderWindow();
     std::shared_ptr<se::Entity> menuBg = std::make_shared<se::Entity>();
     menuBg->setOrigin(59,48);
     menuBg->setPosition(window.getSize().x/2, (window.getSize().y/2)-100);
     menuBg->makeDrawable("menubg");
     myMenuScene->registerRenderable(menuBg);
+}
 
-    items[0] = std::make_shared<MenuItem>("Tanks !");
+/** @brief addGoMenuItem
+  *
+  * @todo: document this function
+  */
+void MenuKeyboardEventObserver::addGoMenuItem()
+{
+    sf::RenderWindow& window = se::GraphicEngine::getInstance()->getRenderWindow();
+    items.push_back(std::make_shared<MenuItem>("Go"));
+
     myMenuScene->registerRenderable(items[0]);
     myMenuScene->registerRenderable(items[0]->myEntity);
-    items[0]->myEntity->setColor(sf::Color::Black);
 
-    items[1] = std::make_shared<MenuItem>("Go");
+    items[0]->myEntity->setOrigin(50,50);
+    items[0]->myEntity->setPosition(window.getSize().x/2, window.getSize().y/2);
+    items[0]->select();
+
+    items[0]->myOption = std::make_shared<se::SimpleFunctorOption<std::function<void()> > >([this]()
+    {
+        hideMenu();
+    });
+}
+
+/** @brief addRestartMenuItem
+  *
+  * @todo: document this function
+  */
+void MenuKeyboardEventObserver::addRestartMenuItem()
+{
+
+}
+
+/** @brief addEffectMenuItem
+  *
+  * @todo: document this function
+  */
+void MenuKeyboardEventObserver::addEffectMenuItem()
+{
+    myMenuScene->registerRenderable(std::make_shared<Blur>());
+}
+
+/** @brief addQuitMenuItem
+  *
+  * @todo: document this function
+  */
+void MenuKeyboardEventObserver::addQuitMenuItem()
+{
+    sf::RenderWindow& window = se::GraphicEngine::getInstance()->getRenderWindow();
+    items.push_back(std::make_shared<MenuItem>("Quit"));
 
     myMenuScene->registerRenderable(items[1]);
     myMenuScene->registerRenderable(items[1]->myEntity);
 
-    items[1]->select();
-
-    items[2] = std::make_shared<MenuItem>("Quit");
-
-    myMenuScene->registerRenderable(items[2]);
-    myMenuScene->registerRenderable(items[2]->myEntity);
-
     items[1]->myEntity->setOrigin(50,50);
-    items[1]->myEntity->setPosition(window.getSize().x/2, window.getSize().y/2);
+    items[1]->myEntity->setPosition(window.getSize().x/2, (window.getSize().y/2)+30);
 
-    items[2]->myEntity->setOrigin(50,50);
-    items[2]->myEntity->setPosition(window.getSize().x/2, (window.getSize().y/2)+30);
-
-    items[2]->myOption = std::make_shared<se::SimpleFunctorOption<std::function<void()> > >([]()
+    items[1]->myOption = std::make_shared<se::SimpleFunctorOption<std::function<void()> > >([]()
     {
         se::Application::getInstance()->stop();
     });
-    items[1]->myOption = std::make_shared<se::SimpleFunctorOption<std::function<void()> > >([this]()
-    {
-        hideMenu();
-    });
-
-    myMenu.addOption(items[1]->myOption);
-    myMenu.addOption(items[2]->myOption);
 }
+
 void MenuKeyboardEventObserver::showMenu()
 {
     if(!myMenuIsOpen)
     {
+        init();
         myMenuIsOpen = true;
+
         se::Application::getInstance()->pushScene(myMenuScene);
     }
 
@@ -96,14 +169,30 @@ void MenuKeyboardEventObserver::notify(const se::Event& event)
         }
         else if(event.getSfEvent().key.code == sf::Keyboard::Down)
         {
-            myMenu.scrollUp();
-            items[currentSelectedItem]->unselect();
 
-            currentSelectedItem = (currentSelectedItem+1)%3;
+            (*currentItem)->unselect();
 
-            if(currentSelectedItem == 0) currentSelectedItem++;
+            if(currentItem+1 != items.end())
+            {
+                currentItem++;
+                myMenu.scrollUp();
+            }
 
-            items[currentSelectedItem]->select();
+            (*currentItem)->select();
+
+        }
+        else if(event.getSfEvent().key.code == sf::Keyboard::Up)
+        {
+
+            (*currentItem)->unselect();
+
+            if(currentItem!=items.begin())
+            {
+                myMenu.scrollDown();
+                currentItem--;
+            }
+
+            (*currentItem)->select();
         }
     }
 }

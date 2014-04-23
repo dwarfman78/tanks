@@ -56,9 +56,7 @@ int main()
 
     menukObs->showMenu();
 
-    a->start();
-
-    //log.append();
+    a->start();   //log.append();
 
     return 0;
 }

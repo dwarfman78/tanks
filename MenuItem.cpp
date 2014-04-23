@@ -12,7 +12,10 @@ MenuItem::MenuItem(const std::string& label) : selected(false), myLabel(label), 
 
     unselect();
 
-    myOption = std::make_shared<se::SimpleFunctorOption<std::function<void()> > >([label](){std::cout<<label<<std::endl;});
+    myOption = std::make_shared<se::SimpleFunctorOption<std::function<void()> > >([label]()
+    {
+        std::cout<<label<<std::endl;
+    });
 
 }
 

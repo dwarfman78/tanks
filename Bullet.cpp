@@ -30,7 +30,7 @@ void Bullet::render()
 void Bullet::unregister()
 {
     unregistered = true;
-    myEntity->unregistered = true;
+    myEntity->getContext().unregister();
 
 }
 void Bullet::defRotation()

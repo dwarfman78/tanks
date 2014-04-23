@@ -125,7 +125,7 @@ bool Ennemi::collision(Bullet& bullet)
 void Ennemi::unregister()
 {
     unregistered = true;
-    myEntity->unregistered=true;
+    myEntity->getContext().unregister();
 }
 void Ennemi::tirer()
 {

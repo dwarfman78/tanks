@@ -56,9 +56,12 @@ void Plateau::renderLogic()
                         if(myJoueur->points%10==0)
                         {
                             myPopTime = myPopTime/1.5;
-                            myApplication.pauseMusic();
-                            myApplication.loadMusic(MUSIC[myZikIndex++%3]);
-                            myApplication.playMusic();
+                            if(!myApplication.getCurrentMusic().getStatus() == sf::Music::Paused)
+                            {
+                                myApplication.pauseMusic();
+                                myApplication.loadMusic(MUSIC[myZikIndex++%3]);
+                                myApplication.playMusic();
+                            }
                         }
 
                         myApplication.addTemporaryParticleEntity(ennemi->myEntity->getPosition().x,ennemi->myEntity->getPosition().y,30,30,0,700000,"explosions","explosion");
@@ -82,7 +85,7 @@ void Plateau::renderLogic()
 
     //std::cout << myPopTime << " " << myClock.getElapsedTime().asMicroseconds() << std::endl;
     if(myClock.getElapsedTime().asMicroseconds()>=myPopTime&&myEnnemis.size()<MAX_ENNEMI)
-    //if(!one)
+        //if(!one)
     {
         one=true;
         myClock.restart();
