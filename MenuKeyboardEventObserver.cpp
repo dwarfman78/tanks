@@ -4,6 +4,8 @@ MenuKeyboardEventObserver::MenuKeyboardEventObserver() : firstShow(true)
     init();
     myMenu.addOption(items[0]->myOption);
     myMenu.addOption(items[1]->myOption);
+
+
 }
 void MenuKeyboardEventObserver::init()
 {
@@ -17,14 +19,11 @@ void MenuKeyboardEventObserver::init()
     addEffectMenuItem();
     addMenuTitle();
     addGoMenuItem();
-
+    addQuitMenuItem();
     if(se::Application::getInstance()->isPaused())
     {
         addRestartMenuItem();
     }
-
-    addQuitMenuItem();
-
     currentItem = items.begin();
 }
 /** @brief addBackground
@@ -84,7 +83,21 @@ void MenuKeyboardEventObserver::addGoMenuItem()
   */
 void MenuKeyboardEventObserver::addRestartMenuItem()
 {
+    sf::RenderWindow& window = se::GraphicEngine::getInstance()->getRenderWindow();
+    items.push_back(std::make_shared<MenuItem>("Restart"));
 
+    myMenuScene->registerRenderable(items[2]);
+    myMenuScene->registerRenderable(items[2]->myEntity);
+
+    items[2]->myEntity->setOrigin(50,50);
+    items[2]->myEntity->setPosition(window.getSize().x/2, (window.getSize().y/2)+60);
+
+    myMenu.addOption(items[2]->myOption);
+
+    items[2]->myOption = std::make_shared<se::SimpleFunctorOption<std::function<void()> > >([]()
+    {
+        se::Application::getInstance()->reset();
+    });
 }
 
 /** @brief addEffectMenuItem
