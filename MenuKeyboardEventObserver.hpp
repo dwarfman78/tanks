@@ -9,6 +9,7 @@
 #include <MenuItem.hpp>
 #include <Blur.hpp>
 #include <SFML/Graphics.hpp>
+#include <Plateau.hpp>
 class MenuKeyboardEventObserver : public se::Observer
 {
     public:
