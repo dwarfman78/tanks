@@ -20,13 +20,13 @@ public:
     void renderLogic();
     void interpolate(float interpolation);
     bool unregister() const;
-    std::set<std::shared_ptr<Bullet> >& getMyBullets();
+    std::unordered_set<std::shared_ptr<Bullet> >& getMyBullets();
     std::shared_ptr<Joueur> myJoueur;
 private:
     float myInterpolation;
     sf::Clock myClock;
-    std::set<std::shared_ptr<Ennemi> > myEnnemis;
-    std::set<std::shared_ptr<Bullet> > myBullets;
+    std::unordered_set<std::shared_ptr<Ennemi> > myEnnemis;
+    std::unordered_set<std::shared_ptr<Bullet> > myBullets;
 
     se::Application& myApplication;
     int myPopTime;
@@ -35,6 +35,13 @@ private:
     const std::string MUSIC2 = "medias/snd/music2.ogg";
     const std::string MUSIC3 = "medias/snd/music3.ogg";
     const std::string MUSIC [3] = {MUSIC1,MUSIC2,MUSIC3};
+
+    const std::string EXPLOSIONS = "explosions";
+    const std::string EXPLOSION = "explosion";
+    const std::string HITS = "hits";
+    const std::string HIT = "hit";
+    const std::string IMPACT = "impact";
+
     int myZikIndex;
 
 };

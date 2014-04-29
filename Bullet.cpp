@@ -4,13 +4,14 @@ Bullet::Bullet(se::Application& application, float angle, float x, float y,Owner
     speed(se::Utils::createFromPolar(se::Utils::degToRads(angle),7)),
     unregistered(false),
     owner(owner),
-    myApplication(application)
+    myApplication(application),
+    window(se::GraphicEngine::getInstance()->getRenderWindow())
 
 {
     myEntity = std::make_shared<se::Entity>();
 
-    myEntity->makeDrawable("bullets");
-    myEntity->makeAnimable("bullet_fire");
+    myEntity->makeDrawable(BULLETS);
+    myEntity->makeAnimable(FIRE);
 
     myEntity->setPosition(x+speed.x*3,y+speed.y*3);
     myEntity->setScale(0.3f,0.3f);
@@ -78,10 +79,6 @@ bool Bullet::collision()
 
     position.x += speed.x*myInterpolation;
     position.y += speed.y*myInterpolation;
-
-    se::GraphicEngine* engine = se::GraphicEngine::getInstance();
-
-    sf::RenderWindow& window = engine->getRenderWindow();
 
     return !(window.getViewport(window.getView()).contains(position.x,position.y));
 }

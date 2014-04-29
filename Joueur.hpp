@@ -36,5 +36,18 @@ private:
     std::shared_ptr<se::Entity> lifeCounter;
     Plateau& myPlateau;
     unsigned int joyLeft, joyRight, joyUp, joyDown, joyFire;
+
+    const std::string MEDIA = "tanks";
+    const std::string RUN = "joueur_run"; /// Animation "run"
+    const std::string STOP = "joueur_stop"; /// Animation "stop"
+    const std::string TIRER = "tirer";
+    const std::string SMOKES = "smokes";
+    const std::string FIRESMOKE = "fire_smoke";
+    const std::string MUZZLES = "muzzles";
+    const std::string MUZZLE = "muzzle";
+    const std::string HP = "HP : ";
+
+    const sf::RenderWindow& window;
+
 };
 #endif // Joueur_hpp

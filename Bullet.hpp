@@ -35,5 +35,10 @@ private:
     bool collision();
     float myInterpolation;
     se::Application& myApplication;
+
+    const std::string FIRE = "bullet_fire";
+    const std::string BULLETS = "bullets";
+
+    const sf::RenderWindow& window;
 };
 #endif // Bullet_hpp

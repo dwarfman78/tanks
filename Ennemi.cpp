@@ -44,13 +44,6 @@ void Ennemi::initCaracteristics()
 
     nspeed = se::Utils::norm(speed);
 
-   /*
-
-    std::uniform_int_distribution<> disPosX(SIZE, window.getSize().x-SIZE);
-    std::uniform_int_distribution<> disPosY(SIZE, window.getSize().y-SIZE);
-
-    myEntity->setPosition(static_cast<float>(disPosX(gen)),static_cast<float>(disPosY(gen)));*/
-
     sf::RenderWindow& window = se::GraphicEngine::getInstance()->getRenderWindow();
 
     std::uniform_int_distribution<> disMod(0,3);
@@ -117,9 +110,13 @@ void Ennemi::defRotation()
 }
 bool Ennemi::collision(Bullet& bullet)
 {
-    sf::FloatRect rectEntity(myEntity->getPosition().x-16,myEntity->getPosition().y-16,32,32);
+    float entityPosX = myEntity->getPosition().x;
+    float entityPosY = myEntity->getPosition().y;
 
-    return rectEntity.contains(bullet.myEntity->getPosition().x,bullet.myEntity->getPosition().y);
+    float bulletPosX = bullet.myEntity->getPosition().x;
+    float bulletPosY = bullet.myEntity->getPosition().y;
+
+    return sf::FloatRect(entityPosX-16,entityPosY-16,32,32).contains(bulletPosX,bulletPosY);
 
 }
 void Ennemi::unregister()
@@ -136,10 +133,10 @@ void Ennemi::tirer()
     myApplication.getCurrentScene()->registerRenderable(newBullet->myEntity);
     myApplication.getCurrentScene()->registerRenderable(newBullet);
 
-    myApplication.addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,110,40,myEntity->getSprite().getRotation()+180,900000,"smokes","fire_smoke");
-    myApplication.addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,70,40,myEntity->getSprite().getRotation()-90,200000,"muzzles","muzzle");
+    myApplication.addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,110,40,myEntity->getSprite().getRotation()+180,900000,SMOKES,FIRESMOKE);
+    myApplication.addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,70,40,myEntity->getSprite().getRotation()-90,200000,MUZZLES,MUZZLE);
 
-    myApplication.addTemporarySoundEntity("tirer");
+    myApplication.addTemporarySoundEntity(TIRER);
 }
 bool Ennemi::unregister() const
 {

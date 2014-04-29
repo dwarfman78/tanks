@@ -9,5 +9,7 @@ public:
     void renderLogic();
     void interpolate(const float interpolation);
     bool unregister()  const ;
+private:
+    const std::string SHADERPATH = "medias/fx/pixelate.frag";
 };
 #endif // Blur_hpp

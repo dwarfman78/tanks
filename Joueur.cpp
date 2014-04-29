@@ -1,12 +1,12 @@
 #include <Joueur.hpp>
 int cpt=1;
 Joueur::Joueur(se::Application& application, Plateau& plateau) : life(30), points(0),
-    myApplication(application), myPlateau(plateau)
+    myApplication(application), myPlateau(plateau),window(se::GraphicEngine::getInstance()->getRenderWindow())
 {
     myEntity = std::make_shared<se::Entity>();
-    myEntity->makeDrawable("tanks");
+    myEntity->makeDrawable(MEDIA);
 
-    myEntity->makeAnimable("joueur_stop");
+    myEntity->makeAnimable(STOP);
 
     myEntity->setPosition(100,100);
 
@@ -33,6 +33,7 @@ Joueur::Joueur(se::Application& application, Plateau& plateau) : life(30), point
     conf->get("upJoyButton",joyUp);
     conf->get("downJoyButton",joyDown);
     conf->get("fireJoyButton",joyFire);
+
 }
 void Joueur::render()
 {
@@ -40,9 +41,13 @@ void Joueur::render()
 }
 bool Joueur::collision(Bullet& bullet)
 {
-    sf::FloatRect rectEntity(myEntity->getPosition().x-16,myEntity->getPosition().y-16,32,32);
+    float entityPosX = myEntity->getPosition().x;
+    float entityPosY = myEntity->getPosition().y;
 
-    return rectEntity.contains(bullet.myEntity->getPosition().x,bullet.myEntity->getPosition().y);
+    float bulletPosX = bullet.myEntity->getPosition().x;
+    float bulletPosY = bullet.myEntity->getPosition().y;
+
+    return sf::FloatRect(entityPosX-16,entityPosY-16,32,32).contains(bulletPosX,bulletPosY);
 }
 void Joueur::tirer()
 {
@@ -54,11 +59,11 @@ void Joueur::tirer()
     myApplication.getCurrentScene()->registerRenderable(newBullet->myEntity);
     myApplication.getCurrentScene()->registerRenderable(newBullet);
 
-    myApplication.addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,110,40,myEntity->getSprite().getRotation()+180,900000,"smokes","fire_smoke");
+    myApplication.addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,110,40,myEntity->getSprite().getRotation()+180,900000,SMOKES,FIRESMOKE);
 
-    myApplication.addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,70,40,myEntity->getSprite().getRotation()-90,200000,"muzzles","muzzle");
+    myApplication.addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,70,40,myEntity->getSprite().getRotation()-90,200000,MUZZLES,MUZZLE);
 
-    myApplication.addTemporarySoundEntity("tirer");
+    myApplication.addTemporarySoundEntity(TIRER);
 
 }
 
@@ -77,7 +82,6 @@ void Joueur::renderLogic()
     }
     else if(life<=10)
     {
-        //sf::Color color(255/life,0,0);
         myEntity->setColor(sf::Color::Red);
     }
     else if(life<=20)
@@ -85,14 +89,14 @@ void Joueur::renderLogic()
         myEntity->setColor(sf::Color(255,128,0));
     }
 
-    lifeCounter->makeWritable("HP: "+se::Utils::toString(life));
+    lifeCounter->makeWritable(HP+se::Utils::toString(life));
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)||sf::Joystick::isButtonPressed(0, joyLeft)) //11
     {
         speed.x = -5;
         speed.y = 0;
 
-        myEntity->makeAnimable("joueur_run");
+        myEntity->makeAnimable(RUN);
 
         myEntity->setRotation(180.f);
 
@@ -112,7 +116,7 @@ void Joueur::renderLogic()
         speed.x = 5;
         speed.y = 0;
 
-        myEntity->makeAnimable("joueur_run");
+        myEntity->makeAnimable(RUN);
 
         myEntity->setRotation(0.f);
 
@@ -134,7 +138,7 @@ void Joueur::renderLogic()
             speed.x = 0;
             speed.y = -5;
 
-            myEntity->makeAnimable("joueur_run");
+            myEntity->makeAnimable(RUN);
             myEntity->setRotation(270.f);
         }
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)||sf::Joystick::isButtonPressed(0, joyDown)) //14
@@ -142,7 +146,7 @@ void Joueur::renderLogic()
             speed.x = 0;
             speed.y = 5;
             myEntity->setRotation(90.f);
-            myEntity->makeAnimable("joueur_run");
+            myEntity->makeAnimable(RUN);
         }
 
     }
@@ -156,7 +160,7 @@ void Joueur::renderLogic()
             !sf::Joystick::isButtonPressed(0, joyUp)&&
             !sf::Joystick::isButtonPressed(0, joyDown))
     {
-        myEntity->makeAnimable("joueur_stop");
+        myEntity->makeAnimable(STOP);
         speed.x = 0;
         speed.y = 0;
     }
@@ -184,10 +188,6 @@ bool Joueur::collision()
 
     position.x += speed.x*myInterpolation;
     position.y += speed.y*myInterpolation;
-
-    se::GraphicEngine* engine = se::GraphicEngine::getInstance();
-
-    sf::RenderWindow& window = engine->getRenderWindow();
 
     return !(window.getViewport(window.getView()).contains(position.x,position.y));
 

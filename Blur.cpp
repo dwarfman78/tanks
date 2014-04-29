@@ -5,7 +5,7 @@
   */
 void Blur::render()
 {
-    se::GraphicEngine::getInstance()->applyShader("medias/fx/pixelate.frag");
+    se::GraphicEngine::getInstance()->applyShader(SHADERPATH);
 }
 
 /** @brief renderLogic

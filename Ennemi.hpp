@@ -57,6 +57,11 @@ private:
     const std::string MEDIA = "tanks";
     const std::string RUN = "ennemi_run"; /// Animation "run"
     const std::string STOP = "ennemi_stop"; /// Animation "stop"
+    const std::string TIRER = "tirer";
+    const std::string SMOKES = "smokes";
+    const std::string FIRESMOKE = "fire_smoke";
+    const std::string MUZZLES = "muzzles";
+    const std::string MUZZLE = "muzzle";
     const std::string MAX_SPEED = "ennemi_maxspeed";
     const std::string MIN_SPEED = "ennemi_minspeed";
     const int SIZE = 16;

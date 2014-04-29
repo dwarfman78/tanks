@@ -20,27 +20,36 @@ void Plateau::render()
 
 }
 
-std::set<std::shared_ptr<Bullet> >& Plateau::getMyBullets()
+std::unordered_set<std::shared_ptr<Bullet> >& Plateau::getMyBullets()
 {
     return myBullets;
 }
 
 void Plateau::renderLogic()
 {
+    float bulletPosX , bulletPosY = 0.f;
 
-    for(std::set<std::shared_ptr<Bullet> >::iterator i = myBullets.begin(); i!=myBullets.end();)
+    float enemyPosX , enemyPosY = 0.f;
+
+    for(std::unordered_set<std::shared_ptr<Bullet> >::iterator i = myBullets.begin(); i!=myBullets.end();)
     {
+
         std::shared_ptr<Bullet> bullet = *i;
+
+        bulletPosX = bullet->myEntity->getPosition().x;
+        bulletPosY = bullet->myEntity->getPosition().y;
+
         if(bullet->unregistered)
         {
             myBullets.erase(*(i++));
         }
         else
         {
-
-            for(std::set<std::shared_ptr<Ennemi> >::iterator e = myEnnemis.begin(); e!=myEnnemis.end();)
+            for(std::unordered_set<std::shared_ptr<Ennemi> >::iterator e = myEnnemis.begin(); e!=myEnnemis.end();)
             {
                 std::shared_ptr<Ennemi> ennemi = *e;
+                enemyPosX = ennemi->myEntity->getPosition().x;
+                enemyPosY = ennemi->myEntity->getPosition().y;
 
                 if(ennemi->unregistered)
                 {
@@ -48,7 +57,7 @@ void Plateau::renderLogic()
                 }
                 else
                 {
-                    if(ennemi->collision(*bullet)&&bullet->owner == Bullet::PLAYER)
+                    if(bullet->owner == Bullet::PLAYER&&ennemi->collision(*bullet))
                     {
                         bullet->unregister();
                         ennemi->unregister();
@@ -64,18 +73,18 @@ void Plateau::renderLogic()
                             }
                         }
 
-                        myApplication.addTemporaryParticleEntity(ennemi->myEntity->getPosition().x,ennemi->myEntity->getPosition().y,30,30,0,700000,"explosions","explosion");
-                        myApplication.addTemporarySoundEntity("explosion");
+                        myApplication.addTemporaryParticleEntity(enemyPosX,enemyPosY,30,30,0,700000,EXPLOSIONS,EXPLOSION);
+                        myApplication.addTemporarySoundEntity(EXPLOSION);
                     }
                     ++e;
                 }
             }
-            if(myJoueur->collision(*bullet)&&bullet->owner == Bullet::ENNEMI)
+            if(bullet->owner == Bullet::ENNEMI&&myJoueur->collision(*bullet))
             {
                 bullet->unregister();
                 myJoueur->life--;
-                myApplication.addTemporaryParticleEntity(bullet->myEntity->getPosition().x,bullet->myEntity->getPosition().y,64,64,0,50000,"hits","hit");
-                myApplication.addTemporarySoundEntity("impact");
+                myApplication.addTemporaryParticleEntity(bulletPosX,bulletPosY,64,64,0,50000,HITS,HIT);
+                myApplication.addTemporarySoundEntity(IMPACT);
 
             }
             ++i;
@@ -90,15 +99,17 @@ void Plateau::renderLogic()
         one=true;
         myClock.restart();
         std::shared_ptr<Ennemi> newEnnemi = std::make_shared<Ennemi>(myApplication,*this);
-        myApplication.getCurrentScene()->registerRenderable(newEnnemi->myEntity);
-        myApplication.getCurrentScene()->registerRenderable(newEnnemi);
+
+        auto scene = myApplication.getCurrentScene();
+        scene->registerRenderable(newEnnemi->myEntity);
+        scene->registerRenderable(newEnnemi);
         myEnnemis.insert(newEnnemi);
     }
 }
 
 void Plateau::interpolate(float interpolation)
 {
-    myInterpolation = interpolation;
+    //myInterpolation = interpolation;
 }
 
 bool Plateau::unregister() const
