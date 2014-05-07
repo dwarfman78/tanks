@@ -20,7 +20,7 @@ int WINAPI WinMain ( HINSTANCE, HINSTANCE, LPSTR, int )
 int main()
 #endif // defined
 {
-    //Logger log("Main::Main");
+    Logger log("Main::Main");
 
     Application* a = Application::getInstance();
 
@@ -56,7 +56,9 @@ int main()
 
     menukObs->showMenu();
 
-    a->start();   //log.append();
+    a->start();
+
+    log.append();
 
     return 0;
 }

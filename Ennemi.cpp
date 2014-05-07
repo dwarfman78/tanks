@@ -92,6 +92,8 @@ void Ennemi::defVectVitesse()
     jPos.x = pos3fJoueur.x;
     jPos.y = pos3fJoueur.y;
 
+    jPos += sf::Vector2f(myPlateau.myJoueur->speed.x*4,myPlateau.myJoueur->speed.y*4);
+
     sf::Vector2f diffPos = jPos-pos;
 
     float norm = se::Utils::norm(diffPos);

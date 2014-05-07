@@ -25,11 +25,11 @@ public:
     int life;
     int points;
     bool unregister() const;
+        sf::Vector2f speed;
 private:
     void tirer();
     bool collision();
     float myInterpolation;
-    sf::Vector2f speed;
     se::Application& myApplication;
     sf::Clock rateOfFireClock;
     std::shared_ptr<se::Entity> goodbyeMessage;

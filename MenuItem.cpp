@@ -1,9 +1,6 @@
 #include <MenuItem.hpp>
 #include <SimpleEngine/Gui/SimpleFunctorOption.hpp>
-/** @brief MenuItem
-  *
-  * @todo: document this function
-  */
+
 MenuItem::MenuItem(const std::string& label) : selected(false), myLabel(label), redIndex(5), sens(5)
 {
     myEntity = std::make_shared<se::Entity>();
@@ -11,27 +8,13 @@ MenuItem::MenuItem(const std::string& label) : selected(false), myLabel(label), 
     myEntity->makeWritable(myLabel);
 
     unselect();
-
-    myOption = std::make_shared<se::SimpleFunctorOption<std::function<void()> > >([label]()
-    {
-        std::cout<<label<<std::endl;
-    });
-
 }
 
-/** @brief ~MenuItem
-  *
-  * @todo: document this function
-  */
 MenuItem::~MenuItem()
 {
 
 }
 
-/** @brief render
-  *
-  * @todo: document this function
-  */
 void MenuItem::render()
 {
 }
@@ -47,10 +30,6 @@ void MenuItem::unselect()
     selected = false;
 }
 
-/** @brief renderLogic
-  *
-  * @todo: document this function
-  */
 void MenuItem::renderLogic()
 {
     if(selected)
@@ -69,23 +48,12 @@ void MenuItem::renderLogic()
     }
 }
 
-/** @brief interpolate
-  *
-  * @todo: document this function
-  */
 void MenuItem::interpolate(const float interpolation)
 {
 
 }
 
-/** @brief unregister
-  *
-  * @todo: document this function
-  */
 bool MenuItem::unregister() const
 {
     return false;
 }
-
-
-
