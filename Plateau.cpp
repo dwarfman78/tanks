@@ -5,12 +5,15 @@ bool one = false;
 int test = 0;
 Plateau::Plateau(se::Application& application) : myApplication(application),myPopTime(4000000),MAX_ENNEMI(15), myZikIndex(3)
 {
+    auto scene = application.getCurrentScene();
 
-    application.loadMusic(MUSIC[myZikIndex++%3]);
-    application.playMusic();
+    scene->loadMusic(MUSIC[myZikIndex++%3]);
+    scene->playMusic();
     myClock.restart();
     myJoueur = std::make_shared<Joueur>(application,*this);
+
     myApplication.getCurrentScene()->registerRenderable(myJoueur->myEntity);
+    myApplication.getCurrentScene()->registerRenderable(myJoueur->myShadow);
     myApplication.getCurrentScene()->registerRenderable(myJoueur);
 
 }
@@ -34,7 +37,7 @@ void Plateau::renderLogic()
 
         float enemyPosX , enemyPosY = 0.f;
 
-
+        auto scene = myApplication.getCurrentScene();
         for(std::unordered_set<std::shared_ptr<Bullet> >::iterator i = myBullets.begin(); i!=myBullets.end();)
         {
 
@@ -69,16 +72,16 @@ void Plateau::renderLogic()
                             if(myJoueur->points%10==0)
                             {
                                 myPopTime = myPopTime/1.5;
-                                if(!myApplication.getCurrentMusic().getStatus() == sf::Music::Paused)
+
+                                if(scene->getCurrentMusic().getStatus() != sf::Music::Stopped)
                                 {
-                                    myApplication.pauseMusic();
-                                    myApplication.loadMusic(MUSIC[myZikIndex++%3]);
-                                    myApplication.playMusic();
+                                    scene->loadMusic(MUSIC[myZikIndex++%3]);
+                                    scene->playMusic();
                                 }
                             }
 
-                            myApplication.addTemporaryParticleEntity(enemyPosX,enemyPosY,30,30,0,700000,EXPLOSIONS,EXPLOSION);
-                            myApplication.addTemporarySoundEntity(EXPLOSION);
+                            scene->addTemporaryParticleEntity(enemyPosX,enemyPosY,30,30,0,700000,EXPLOSIONS,EXPLOSION);
+                            scene->addTemporarySoundEntity(EXPLOSION);
                         }
                         ++e;
                     }
@@ -87,8 +90,9 @@ void Plateau::renderLogic()
                 {
                     bullet->unregister();
                     myJoueur->life--;
-                    myApplication.addTemporaryParticleEntity(bulletPosX,bulletPosY,64,64,0,50000,HITS,HIT);
-                    myApplication.addTemporarySoundEntity(IMPACT);
+
+                    scene->addTemporaryParticleEntity(bulletPosX,bulletPosY,64,64,0,50000,HITS,HIT);
+                    scene->addTemporarySoundEntity(IMPACT);
 
                 }
                 ++i;
@@ -105,6 +109,8 @@ void Plateau::renderLogic()
 
             auto scene = myApplication.getCurrentScene();
             scene->registerRenderable(newEnnemi->myEntity);
+            scene->registerRenderable(newEnnemi->myShadow);
+
             scene->registerRenderable(newEnnemi);
             myEnnemis.insert(newEnnemi);
         }
@@ -121,4 +127,8 @@ void Plateau::interpolate(float interpolation)
 bool Plateau::unregister() const
 {
     return false;
+}
+unsigned int Plateau::renderingPosition() const
+{
+    return 0;
 }

@@ -21,7 +21,9 @@ public:
     void interpolate(float interpolation);
     void unregister(Bullet& bullet);
     bool collision(Bullet& bullet);
+    unsigned int renderingPosition() const;
     std::shared_ptr<se::Entity> myEntity;
+    std::shared_ptr<se::Entity> myShadow;
     int life;
     int points;
     bool unregister() const;
@@ -45,6 +47,7 @@ private:
     const std::string FIRESMOKE = "fire_smoke";
     const std::string MUZZLES = "muzzles";
     const std::string MUZZLE = "muzzle";
+    const std::string SHADOW = "shadow";
     const std::string HP = "HP : ";
 
     const sf::RenderWindow& window;

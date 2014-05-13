@@ -34,4 +34,8 @@ bool Blur::unregister() const
 {
 return false;
 }
+unsigned int Blur::renderingPosition() const
+{
+    return 1;
+}
 

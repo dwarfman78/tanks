@@ -9,6 +9,7 @@
 #include <SimpleEngine/ToolBox/Utils.hpp>
 #include <SimpleEngine/Graphic/GraphicEngine.hpp>
 #include <SimpleEngine/ToolBox/Utils.hpp>
+#include <SimpleEngine/Core/Scene.hpp>
 #include <SFML/Graphics.hpp>
 #include <random>
 #include <SimpleEngine/ToolBox/Config.hpp>
@@ -27,7 +28,9 @@ public:
     void unregister();
     bool unregister() const;
     bool unregistered;
+    unsigned int renderingPosition() const;
     std::shared_ptr<se::Entity> myEntity;
+    std::shared_ptr<se::Entity> myShadow;
 private:
     /////////////////////////////
     /// Private methods.
@@ -62,6 +65,7 @@ private:
     const std::string FIRESMOKE = "fire_smoke";
     const std::string MUZZLES = "muzzles";
     const std::string MUZZLE = "muzzle";
+    const std::string SHADOW = "shadow";
     const std::string MAX_SPEED = "ennemi_maxspeed";
     const std::string MIN_SPEED = "ennemi_minspeed";
     const int SIZE = 16;

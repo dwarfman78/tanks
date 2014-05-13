@@ -15,6 +15,8 @@ void Ennemi::initGraphics()
 {
     myEntity->makeDrawable(MEDIA);
 
+    myShadow->makeDrawable(SHADOW);
+
     myEntity->makeAnimable(STOP);
 
 }
@@ -66,10 +68,15 @@ void Ennemi::initCaracteristics()
 
     myEntity->setOrigin(SIZE,SIZE);
 
+    myShadow->setOrigin(SIZE,SIZE);
+
+
 }
 void Ennemi::initEntity(se::Application& application)
 {
     myEntity = std::make_shared<se::Entity>();
+    myEntity->setRenderingPosition(1);
+    myShadow = std::make_shared<se::Entity>();
     initGraphics();
     initCaracteristics();
 
@@ -109,6 +116,7 @@ void Ennemi::defRotation()
         rotationDeg*=-1;
 
     myEntity->setRotation(rotationDeg);
+    myShadow->setRotation(rotationDeg);
 }
 bool Ennemi::collision(Bullet& bullet)
 {
@@ -125,6 +133,7 @@ void Ennemi::unregister()
 {
     unregistered = true;
     myEntity->getContext().unregister();
+    myShadow->getContext().unregister();
 }
 void Ennemi::tirer()
 {
@@ -132,13 +141,15 @@ void Ennemi::tirer()
 
     myPlateau.getMyBullets().insert(newBullet);
 
-    myApplication.getCurrentScene()->registerRenderable(newBullet->myEntity);
-    myApplication.getCurrentScene()->registerRenderable(newBullet);
+    std::shared_ptr<se::Scene> scene = myApplication.getCurrentScene();
 
-    myApplication.addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,110,40,myEntity->getSprite().getRotation()+180,900000,SMOKES,FIRESMOKE);
-    myApplication.addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,70,40,myEntity->getSprite().getRotation()-90,200000,MUZZLES,MUZZLE);
+    scene->registerRenderable(newBullet->myEntity);
+    scene->registerRenderable(newBullet);
 
-    myApplication.addTemporarySoundEntity(TIRER);
+    scene->addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,110,40,myEntity->getSprite().getRotation()+180,900000,SMOKES,FIRESMOKE);
+    scene->addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,70,40,myEntity->getSprite().getRotation()-90,200000,MUZZLES,MUZZLE);
+
+    scene->addTemporarySoundEntity(TIRER);
 }
 bool Ennemi::unregister() const
 {
@@ -153,7 +164,7 @@ void Ennemi::renderLogic()
         tirer();
 
         if(speed.x!=0||speed.y!=0)
-            myApplication.addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*-3,myEntity->getPosition().y+speed.y*-3,16,16,myEntity->getSprite().getRotation()-90,5000000,"trails","trail");
+            myApplication.getCurrentScene()->addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*-3,myEntity->getPosition().y+speed.y*-3,16,16,myEntity->getSprite().getRotation()-90,5000000,"trails","trail");
     }
     if(!collision())
     {
@@ -162,6 +173,8 @@ void Ennemi::renderLogic()
         myEntity->makeAnimable(RUN);
         myEntity->setPosition(myEntity->getPosition().x+(speed.x*(myInterpolation)),
                               myEntity->getPosition().y+(speed.y*(myInterpolation)));
+
+        myShadow->setPosition(myEntity->getPosition().x, myEntity->getPosition().y);
 
         defRotation();
     }
@@ -190,4 +203,8 @@ bool Ennemi::collision()
     sf::FloatRect recJoueur = sf::FloatRect(joueurPos.x-32,joueurPos.y-32,64,64);
 
     return recJoueur.contains(position.x,position.y);
+}
+unsigned int Ennemi::renderingPosition() const
+{
+    return 1;
 }

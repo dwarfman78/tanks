@@ -2,7 +2,7 @@
 #define MenuKeyboardEventObserver_hpp
 #include <SimpleEngine/Core/Observer.hpp>
 #include <SimpleEngine/Core/Scene.hpp>
-#include <SimpleEngine/Core/Impl/SceneVectorImplementation.hpp>
+#include <SimpleEngine/Core/Impl/SceneSetImplementation.hpp>
 #include <SimpleEngine/Gui/SimpleFunctorOption.hpp>
 #include <SimpleEngine/Core/Application.hpp>
 #include <SimpleEngine/Gui/Menu.hpp>
@@ -26,6 +26,7 @@ class MenuKeyboardEventObserver : public se::Observer
         void addBackground();
         void addMenuTitle();
         void addQuitMenuItem();
+        void insertMenuItem(bool select, const std::string& content, unsigned int renderingPos, float oriX, float oriY, float posX, float posY, std::shared_ptr<se::Option> action);
 
         std::shared_ptr<se::Scene> myMenuScene;
         se::Menu myMenu;

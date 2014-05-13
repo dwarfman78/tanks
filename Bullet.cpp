@@ -17,7 +17,7 @@ Bullet::Bullet(se::Application& application, float angle, float x, float y,Owner
     myEntity->setScale(0.3f,0.3f);
     myEntity->setOrigin(12,12);
 
-    defRotation();
+    //defRotation();
 }
 
 Bullet::~Bullet()
@@ -33,20 +33,6 @@ void Bullet::unregister()
     unregistered = true;
     myEntity->getContext().unregister();
 
-}
-void Bullet::defRotation()
-{
-    sf::Vector2f abscisse(1,0);
-    double nspeed = se::Utils::norm(speed);
-
-    float rotationRad = (acos((speed.x*abscisse.x)/nspeed));
-
-    float rotationDeg = se::Utils::radsToDeg(rotationRad);
-
-    if(se::Utils::det(speed,abscisse)>0)
-        rotationDeg*=-1;
-
-    myEntity->setRotation(rotationDeg);
 }
 
 bool Bullet::unregister() const
@@ -81,4 +67,8 @@ bool Bullet::collision()
     position.y += speed.y*myInterpolation;
 
     return !(window.getViewport(window.getView()).contains(position.x,position.y));
+}
+unsigned int Bullet::renderingPosition() const
+{
+    return 1;
 }

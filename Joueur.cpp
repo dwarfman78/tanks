@@ -3,6 +3,14 @@ int cpt=1;
 Joueur::Joueur(se::Application& application, Plateau& plateau) : life(30), points(0),
     myApplication(application), myPlateau(plateau),window(se::GraphicEngine::getInstance()->getRenderWindow())
 {
+    myShadow = std::make_shared<se::Entity>();
+    myShadow->makeDrawable(SHADOW);
+    myShadow->setPosition(100,100);
+
+    myShadow->setOrigin(16,16);
+
+    myShadow->setRotation(0);
+
     myEntity = std::make_shared<se::Entity>();
     myEntity->makeDrawable(MEDIA);
 
@@ -14,6 +22,8 @@ Joueur::Joueur(se::Application& application, Plateau& plateau) : life(30), point
 
     myEntity->setRotation(0);
 
+    myEntity->setRenderingPosition(1);
+
     lifeCounter = std::make_shared<se::Entity>();
 
     lifeCounter->makeWritable(se::Utils::toString(life));
@@ -21,6 +31,8 @@ Joueur::Joueur(se::Application& application, Plateau& plateau) : life(30), point
     lifeCounter->setPosition(0,0);
 
     lifeCounter->setScale(0.5,0.5);
+
+    lifeCounter->setRenderingPosition(3);
 
     myApplication.getCurrentScene()->registerRenderable(lifeCounter);
 
@@ -56,14 +68,16 @@ void Joueur::tirer()
 
     myPlateau.getMyBullets().insert(newBullet);
 
-    myApplication.getCurrentScene()->registerRenderable(newBullet->myEntity);
-    myApplication.getCurrentScene()->registerRenderable(newBullet);
+    auto scene = myApplication.getCurrentScene();
 
-    myApplication.addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,110,40,myEntity->getSprite().getRotation()+180,900000,SMOKES,FIRESMOKE);
+    scene->registerRenderable(newBullet->myEntity);
+    scene->registerRenderable(newBullet);
 
-    myApplication.addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,70,40,myEntity->getSprite().getRotation()-90,200000,MUZZLES,MUZZLE);
+    scene->addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,110,40,myEntity->getSprite().getRotation()+180,900000,SMOKES,FIRESMOKE);
 
-    myApplication.addTemporarySoundEntity(TIRER);
+    scene->addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,70,40,myEntity->getSprite().getRotation()-90,200000,MUZZLES,MUZZLE);
+
+    scene->addTemporarySoundEntity(TIRER);
 
 }
 
@@ -78,6 +92,7 @@ void Joueur::renderLogic()
         goodbyeMessage->setPosition(window.getSize().x/2,window.getSize().y/2);
         goodbyeMessage->setScale(0.5,0.5);
         goodbyeMessage->setRotation(0);
+        goodbyeMessage->setRenderingPosition(3);
         myApplication.getCurrentScene()->registerRenderable(goodbyeMessage);
     }
     else if(life<=10)
@@ -99,16 +114,19 @@ void Joueur::renderLogic()
         myEntity->makeAnimable(RUN);
 
         myEntity->setRotation(180.f);
+        myShadow->setRotation(180.f);
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)||sf::Joystick::isButtonPressed(0, joyUp)) //13
         {
             speed.y = -5;
             myEntity->setRotation(225.f);
+            myShadow->setRotation(225.f);
         }
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)||sf::Joystick::isButtonPressed(0, joyDown)) //14
         {
             speed.y = 5;
             myEntity->setRotation(135.f);
+            myShadow->setRotation(135.f);
         }
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)||sf::Joystick::isButtonPressed(0, joyRight)) //12
@@ -119,16 +137,19 @@ void Joueur::renderLogic()
         myEntity->makeAnimable(RUN);
 
         myEntity->setRotation(0.f);
+        myShadow->setRotation(0.f);
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)||sf::Joystick::isButtonPressed(0, joyUp)) //13
         {
             speed.y = -5;
             myEntity->setRotation(315.f);
+            myShadow->setRotation(315.f);
         }
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)||sf::Joystick::isButtonPressed(0, joyDown)) //14
         {
             speed.y = 5;
             myEntity->setRotation(45.f);
+            myShadow->setRotation(45.f);
         }
     }
     else
@@ -140,12 +161,14 @@ void Joueur::renderLogic()
 
             myEntity->makeAnimable(RUN);
             myEntity->setRotation(270.f);
+            myShadow->setRotation(270.f);
         }
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)||sf::Joystick::isButtonPressed(0, joyDown)) //14
         {
             speed.x = 0;
             speed.y = 5;
             myEntity->setRotation(90.f);
+            myShadow->setRotation(90.f);
             myEntity->makeAnimable(RUN);
         }
 
@@ -169,6 +192,10 @@ void Joueur::renderLogic()
     {
         myEntity->setPosition(myEntity->getPosition().x+(speed.x*(myInterpolation)),
                               myEntity->getPosition().y+(speed.y*(myInterpolation)));
+
+
+        myShadow->setPosition(myEntity->getPosition().x,
+                              myEntity->getPosition().y);
 
 
     }
@@ -199,4 +226,8 @@ bool Joueur::unregister() const
 void Joueur::interpolate(float interpolation)
 {
     myInterpolation=interpolation;
+}
+unsigned int Joueur::renderingPosition() const
+{
+    return 1;
 }

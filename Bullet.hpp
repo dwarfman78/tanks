@@ -29,9 +29,9 @@ enum Owner{
     sf::Vector2f speed;
     bool unregistered;
     Owner owner;
+    unsigned int renderingPosition() const;
 
 private:
-    void defRotation();
     bool collision();
     float myInterpolation;
     se::Application& myApplication;

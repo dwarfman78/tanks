@@ -20,13 +20,11 @@ void MenuItem::render()
 }
 void MenuItem::select()
 {
-    //myEntity->makeWritable(">" + myLabel);
     selected = true;
     redIndex = 5;
 }
 void MenuItem::unselect()
 {
-    //myEntity->makeWritable(" " + myLabel);
     selected = false;
 }
 
@@ -36,6 +34,10 @@ void MenuItem::renderLogic()
     {
         myEntity->setColor(sf::Color(redIndex,0,0));
 
+        float transition = redIndex/512.f;
+        transition+=1.f;
+        myEntity->setScale(transition,transition);
+
         if(redIndex == 255 || redIndex == 0)
         {
             sens *= -1;
@@ -44,6 +46,7 @@ void MenuItem::renderLogic()
     }
     else
     {
+        myEntity->setScale(1,1);
         myEntity->setColor(sf::Color::Black);
     }
 }
@@ -56,4 +59,8 @@ void MenuItem::interpolate(const float interpolation)
 bool MenuItem::unregister() const
 {
     return false;
+}
+unsigned int MenuItem::renderingPosition() const
+{
+    return 1;
 }

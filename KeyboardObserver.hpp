@@ -11,15 +11,17 @@ public:
     KeyboardObserver() : paused(false){;}
     void notify(const se::Event& event)
     {
+        auto scene = se::Application::getInstance()->getCurrentScene();
+
         if(event.getSfEvent().type == sf::Event::KeyPressed && event.getSfEvent().key.code == sf::Keyboard::M)
         {
             if(!paused)
             {
-                se::Application::getInstance()->pauseMusic();
+                scene->pauseMusic();
             }
             else
             {
-                se::Application::getInstance()->playMusic();
+                scene->playMusic();
             }
             paused = ! paused;
 

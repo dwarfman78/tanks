@@ -22,6 +22,7 @@ public:
     bool unregister() const;
     std::unordered_set<std::shared_ptr<Bullet> >& getMyBullets();
     std::shared_ptr<Joueur> myJoueur;
+    unsigned int renderingPosition() const;
 private:
     float myInterpolation;
     sf::Clock myClock;

@@ -9,6 +9,7 @@ public:
     void renderLogic();
     void interpolate(const float interpolation);
     bool unregister()  const ;
+    unsigned int renderingPosition() const;
 private:
     const std::string SHADERPATH = "medias/fx/pixelate.frag";
 };
