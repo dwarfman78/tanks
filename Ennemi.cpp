@@ -3,7 +3,9 @@
 Ennemi::Ennemi(se::Application& application, Plateau& p) :
     unregistered(false),
     myPlateau(p),
-    myApplication(application)
+    myApplication(application),
+    gen(time(NULL)),
+    dis(10,30)
 {
     initEntity(application);
 }
@@ -26,10 +28,6 @@ void Ennemi::initCaracteristics()
     se::Config* conf = se::Config::getInstance();
 
     int vitesseMin, vitesseMax = 1;
-
-    std::mt19937 gen(time(NULL));
-
-    std::uniform_int_distribution<> dis(1,1);
 
     if(conf->get(MIN_SPEED,vitesseMin)&&conf->get(MAX_SPEED,vitesseMax))
     {
@@ -57,11 +55,25 @@ void Ennemi::initCaracteristics()
 
     switch(disMod(gen))
     {
-        case 0 : startX = varPart; startY = -varPart;break;
-        case 1 : startX = window.getSize().x + varPart; startY = varPart;break;
-        case 2 : startX = window.getSize().x + varPart; startY = window.getSize().y + varPart; break;
-        case 3 : startX = -varPart; startY = window.getSize().y +varPart; break;
-        default :; break;
+    case 0 :
+        startX = varPart;
+        startY = -varPart;
+        break;
+    case 1 :
+        startX = window.getSize().x + varPart;
+        startY = varPart;
+        break;
+    case 2 :
+        startX = window.getSize().x + varPart;
+        startY = window.getSize().y + varPart;
+        break;
+    case 3 :
+        startX = -varPart;
+        startY = window.getSize().y +varPart;
+        break;
+    default :
+        ;
+        break;
     }
 
     myEntity->setPosition(startX,startY);
@@ -148,6 +160,25 @@ void Ennemi::tirer()
 
     scene->addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,110,40,myEntity->getSprite().getRotation()+180,900000,SMOKES,FIRESMOKE);
     scene->addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,70,40,myEntity->getSprite().getRotation()-90,200000,MUZZLES,MUZZLE);
+
+    auto shellEntity = scene->addTemporaryPhysicParticle(myEntity->getPosition().x,myEntity->getPosition().y,7.5,1.5,0,5000000,SHELL,SHELL);
+
+    auto body = shellEntity->getContext().getPhysicContext().getBody();
+
+    b2FrictionJointDef jd;
+
+    jd.bodyA = body;
+    jd.bodyB = myApplication.getCurrentScene()->getGround();
+    jd.maxForce = 0.005;
+    jd.maxTorque = 0.00001f;
+
+    myApplication.getCurrentScene()->getPhysicWorld().CreateJoint(&jd);
+
+    body->ApplyForceToCenter(b2Vec2(-speed.x/20,0.0),true);
+
+    float tork = dis(gen)/10000.f;
+
+    body->ApplyTorque(tork,true);
 
     scene->addTemporarySoundEntity(TIRER);
 }

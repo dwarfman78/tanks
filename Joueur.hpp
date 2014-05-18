@@ -27,7 +27,7 @@ public:
     int life;
     int points;
     bool unregister() const;
-        sf::Vector2f speed;
+    sf::Vector2f speed;
 private:
     void tirer();
     bool collision();
@@ -48,9 +48,16 @@ private:
     const std::string MUZZLES = "muzzles";
     const std::string MUZZLE = "muzzle";
     const std::string SHADOW = "shadow";
+    const std::string SHELL = "shell";
     const std::string HP = "HP : ";
 
     const sf::RenderWindow& window;
+
+    b2Vec2 ejection;
+
+    std::mt19937 gen;
+
+    std::uniform_int_distribution<> dis;
 
 };
 #endif // Joueur_hpp

@@ -68,7 +68,13 @@ private:
     const std::string SHADOW = "shadow";
     const std::string MAX_SPEED = "ennemi_maxspeed";
     const std::string MIN_SPEED = "ennemi_minspeed";
+    const std::string SHELL = "shell";
     const int SIZE = 16;
+
+
+    std::mt19937 gen;
+
+    std::uniform_int_distribution<> dis;
 
 };
 #endif // Ennemi_hpp
