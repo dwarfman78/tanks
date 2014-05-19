@@ -79,7 +79,7 @@ void Joueur::tirer()
 
     scene->addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*3,myEntity->getPosition().y+speed.y*3,70,40,myEntity->getSprite().getRotation()-90,200000,MUZZLES,MUZZLE);
 
-    auto shellEntity = scene->addTemporaryPhysicParticle(myEntity->getPosition().x,myEntity->getPosition().y,/*7.5,1.5*/0,0,0,5000000,SHELL,SHELL);
+    auto shellEntity = scene->addTemporaryPhysicParticle(myEntity->getPosition().x,myEntity->getPosition().y,0,0,0,5000000,SHELL,SHELL);
 
     auto body = shellEntity->getContext().getPhysicContext().getBody();
 

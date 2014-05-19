@@ -13,7 +13,6 @@ void MenuKeyboardEventObserver::init()
 
     se::Application* app = se::Application::getInstance();
 
-
     if(!firstShow)
     {
         addBackground();
@@ -167,6 +166,7 @@ void MenuKeyboardEventObserver::hideMenu()
         myMenuIsOpen = false;
         myMenuScene->pauseMusic();
         app->popScene();
+        app->getCurrentScene()->loadMusic("medias/snd/music1.ogg");
         app->getCurrentScene()->playMusic();
     }
 
@@ -186,7 +186,6 @@ void MenuKeyboardEventObserver::notify(const se::Event& event)
             if(myMenuIsOpen)
             {
                 hideMenu();
-
             }
             else
             {
