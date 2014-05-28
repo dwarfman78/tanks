@@ -82,6 +82,7 @@ void Plateau::renderLogic()
 
                             scene->addTemporaryParticleEntity(enemyPosX,enemyPosY,30,30,0,700000,EXPLOSIONS,EXPLOSION);
                             scene->addTemporarySoundEntity(EXPLOSION);
+                            makeExplosion(b2Vec2(se::Utils::pixelsToMeters(ennemi->myEntity->getPosition().x),se::Utils::pixelsToMeters(ennemi->myEntity->getPosition().y)));
                         }
                         ++e;
                     }
@@ -89,7 +90,7 @@ void Plateau::renderLogic()
                 if(bullet->owner == Bullet::ENNEMI&&myJoueur->collision(*bullet))
                 {
                     bullet->unregister();
-                    myJoueur->life--;
+                    myJoueur->lowerHealth();
 
                     scene->addTemporaryParticleEntity(bulletPosX,bulletPosY,64,64,0,50000,HITS,HIT);
                     scene->addTemporarySoundEntity(IMPACT);
@@ -101,7 +102,7 @@ void Plateau::renderLogic()
         }
 
         if(myClock.getElapsedTime().asMicroseconds()>=myPopTime&&myEnnemis.size()<MAX_ENNEMI)
-        //if(!one)
+            //if(!one)
         {
             one=true;
             myClock.restart();
@@ -118,6 +119,22 @@ void Plateau::renderLogic()
 
     test++;
 }
+void Plateau::makeExplosion(const b2Vec2& center)
+{
+    for (int i = 0; i < 512; i++)
+    {
+        float angle = (i / 512.f) * 360 * 0.0174532925199432957f;
+        b2Vec2 rayDir( sinf(angle), cosf(angle) );
+        b2Vec2 rayEnd = center + 55.f * rayDir;
+
+        //check what this ray hits
+        se::RaycastNearestCallback callback;//basic callback to record body and hit point
+        myApplication.getCurrentScene()->getPhysicWorld().RayCast(&callback, center, rayEnd);
+        if ( callback.myBody != nullptr)
+            se::Utils::applyBlastImpulse(callback.myBody, center, callback.myPoint, (0.05f / 512.f));
+    }
+}
+
 
 void Plateau::interpolate(float interpolation)
 {

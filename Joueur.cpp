@@ -36,6 +36,8 @@ Joueur::Joueur(se::Application& application, Plateau& plateau) : life(30), point
 
     lifeCounter->setRenderingPosition(3);
 
+    lifeCounter->makeWritable(HP+se::Utils::toString(life));
+
     myApplication.getCurrentScene()->registerRenderable(lifeCounter);
 
     goodbyeMessage = std::make_shared<se::Entity>();
@@ -101,7 +103,11 @@ void Joueur::tirer()
     scene->addTemporarySoundEntity(TIRER);
 
 }
-
+void Joueur::lowerHealth()
+{
+    life--;
+    lifeCounter->makeWritable(HP+se::Utils::toString(life));
+}
 void Joueur::renderLogic()
 {
     if(life<=0)
@@ -124,8 +130,6 @@ void Joueur::renderLogic()
     {
         myEntity->setColor(sf::Color(255,128,0));
     }
-
-    lifeCounter->makeWritable(HP+se::Utils::toString(life));
 
     float ejectionForce = 0.250;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)||sf::Joystick::isButtonPressed(0, joyLeft)) //11

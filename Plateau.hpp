@@ -8,6 +8,7 @@
 #include <SimpleEngine/Graphic/AnimationManager.hpp>
 #include <SimpleEngine/ToolBox/Utils.hpp>
 #include <SimpleEngine/Core/Impl/SceneSetImplementation.hpp>
+#include <SimpleEngine/Physics/RaycastNearestCallback.hpp>
 #include <SFML/Graphics.hpp>
 #include <Bullet.hpp>
 class Joueur;
@@ -23,6 +24,7 @@ public:
     std::unordered_set<std::shared_ptr<Bullet> >& getMyBullets();
     std::shared_ptr<Joueur> myJoueur;
     unsigned int renderingPosition() const;
+    void makeExplosion(const b2Vec2& center);
 private:
     float myInterpolation;
     sf::Clock myClock;

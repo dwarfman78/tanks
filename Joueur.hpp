@@ -22,6 +22,7 @@ public:
     void unregister(Bullet& bullet);
     bool collision(Bullet& bullet);
     unsigned int renderingPosition() const;
+    void lowerHealth();
     std::shared_ptr<se::Entity> myEntity;
     std::shared_ptr<se::Entity> myShadow;
     int life;
