@@ -8,7 +8,6 @@
 #include <SimpleEngine/Graphic/AnimationManager.hpp>
 #include <SimpleEngine/ToolBox/Utils.hpp>
 #include <SimpleEngine/Core/Impl/SceneSetImplementation.hpp>
-#include <SimpleEngine/Physics/RaycastNearestCallback.hpp>
 #include <SFML/Graphics.hpp>
 #include <Bullet.hpp>
 class Joueur;
@@ -41,11 +40,16 @@ private:
 
     const std::string EXPLOSIONS = "explosions";
     const std::string EXPLOSION = "explosion";
+    const std::string BLAST1 = "blast1";
+    const std::string BLAST2 = "blast2";
+    const std::string BLAST3 = "blast3";
+    const std::string BLAST [3] = {BLAST1,BLAST2,BLAST3};
     const std::string HITS = "hits";
     const std::string HIT = "hit";
     const std::string IMPACT = "impact";
 
-    int myZikIndex;
+    unsigned int myZikIndex;
+    unsigned int myBlastIndex;
 
 };
 #endif
