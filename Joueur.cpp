@@ -32,7 +32,7 @@ Joueur::Joueur(se::Application& application, Plateau& plateau) : life(30), point
 
     lifeCounter->setPosition(0,0);
 
-    lifeCounter->setScale(0.5,0.5);
+    //lifeCounter->setScale(0.5,0.5);
 
     lifeCounter->setRenderingPosition(3);
 
