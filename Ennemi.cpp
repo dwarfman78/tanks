@@ -87,7 +87,7 @@ void Ennemi::initCaracteristics()
 void Ennemi::initEntity(se::Application& application)
 {
     myEntity = std::make_shared<se::Entity>();
-    myEntity->setRenderingPosition(1);
+    myEntity->setRenderingPosition(2);
     myShadow = std::make_shared<se::Entity>();
     initGraphics();
     initCaracteristics();
@@ -188,24 +188,27 @@ bool Ennemi::unregister() const
 }
 void Ennemi::renderLogic()
 {
+    sf::Vector3f ePos = myEntity->getPosition();
     if(myBrainTick.getElapsedTime().asMilliseconds()>200)
     {
+
         myBrainTick.restart();
 
         tirer();
 
         if(speed.x!=0||speed.y!=0)
-            myApplication.getCurrentScene()->addTemporaryParticleEntity(myEntity->getPosition().x+speed.x*-3,myEntity->getPosition().y+speed.y*-3,16,16,myEntity->getSprite().getRotation()-90,5000000,"trails","trail");
+            myApplication.getCurrentScene()->addTemporaryParticleEntity(ePos.x+speed.x*-3,ePos.y+speed.y*-3,16,16,myEntity->getSprite().getRotation()-90,5000000,"trails","trail");
+
     }
     if(!collision())
     {
         defVectVitesse();
 
         myEntity->makeAnimable(RUN);
-        myEntity->setPosition(myEntity->getPosition().x+(speed.x*(myInterpolation)),
-                              myEntity->getPosition().y+(speed.y*(myInterpolation)));
+        myEntity->setPosition(ePos.x+(speed.x*(myInterpolation)),
+                              ePos.y+(speed.y*(myInterpolation)));
 
-        myShadow->setPosition(myEntity->getPosition().x, myEntity->getPosition().y);
+        myShadow->setPosition(ePos.x, ePos.y);
 
         defRotation();
     }
@@ -237,5 +240,5 @@ bool Ennemi::collision()
 }
 unsigned int Ennemi::renderingPosition() const
 {
-    return 1;
+    return 2;
 }

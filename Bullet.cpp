@@ -16,6 +16,7 @@ Bullet::Bullet(se::Application& application, float angle, float x, float y,Owner
     myEntity->setPosition(x+speed.x*3,y+speed.y*3);
     myEntity->setScale(0.3f,0.3f);
     myEntity->setOrigin(12,12);
+    myEntity->setRenderingPosition(2);
 
     //defRotation();
 }
@@ -70,5 +71,5 @@ bool Bullet::collision()
 }
 unsigned int Bullet::renderingPosition() const
 {
-    return 1;
+    return 2;
 }

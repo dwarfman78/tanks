@@ -24,7 +24,7 @@ Joueur::Joueur(se::Application& application, Plateau& plateau) : life(30), point
 
     myEntity->setRotation(0);
 
-    myEntity->setRenderingPosition(1);
+    myEntity->setRenderingPosition(2);
 
     lifeCounter = std::make_shared<se::Entity>();
 
@@ -276,5 +276,5 @@ void Joueur::interpolate(float interpolation)
 }
 unsigned int Joueur::renderingPosition() const
 {
-    return 1;
+    return 2;
 }
